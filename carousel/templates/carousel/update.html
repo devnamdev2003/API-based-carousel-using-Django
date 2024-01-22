@@ -1,0 +1,69 @@
+<!-- carousel/templates/carousel/update_form.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Update Carousel Item</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h2>Update Carousel Item</h2>
+      <form id="updateForm">
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input type="text" class="form-control" id="title" name="title" required />
+          <label for="link">URL</label>
+          <input type="text" class="form-control" id="image_url" name="image_url" required />
+          <label for="description">Description</label>
+          <input type="text" class="form-control" id="description" name="description" required />
+        </div>
+        <!-- Add other form fields as needed -->
+
+        <button type="submit" class="btn btn-primary">Update</button>
+      </form>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        // Fetch item data and fill the form fields
+        const url = window.location.pathname.split('/')
+        let itemId = url[2]
+        fetch(`/api/${itemId}/`)
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById('title').value = data.title
+            document.getElementById('image_url').value = data.image_url
+            document.getElementById('description').value = data.description
+            // Set values for other form fields as needed
+          })
+          .catch((error) => console.error('Error fetching item data:', error))
+      
+        // Submit form with API call
+        document.getElementById('updateForm').addEventListener('submit', function (event) {
+          event.preventDefault()
+      
+          // Get form data
+          const formData = new FormData(this)
+      
+          // Make API call to update item
+          fetch(`/api/${itemId}/`, {
+            method: 'PUT',
+            headers: {
+              'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: formData
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              alert('Item updated successfully!')
+              window.location.href = '/list'
+            })
+            .catch((error) => console.error('Error updating item:', error))
+        })
+      })
+    </script>
+  </body>
+</html>

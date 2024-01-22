@@ -4,4 +4,4 @@ from .models import CarouselItem
 class CarouselItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = CarouselItem
-        fields = ['title', 'image_url', 'description']
+        fields = ['id','title', 'image_url', 'description']
